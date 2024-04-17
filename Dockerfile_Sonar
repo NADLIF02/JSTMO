@@ -1,5 +1,9 @@
 # Start from the SonarQube LTS community edition image
 FROM sonarqube:lts-community
 
+# Setting environmental variables to manage SonarQube's settings
+ENV SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+    ES_JAVA_OPTS="-Xmx1g -Xms512m"
+
 # Expose port 9000 for web interface access
 EXPOSE 9000
