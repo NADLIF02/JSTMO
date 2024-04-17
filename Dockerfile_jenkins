@@ -1,29 +1,19 @@
-# Use the base image with Ubuntu
 FROM ubuntu:latest
 
-# Update package lists and install necessary tools
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    gnupg \
-    software-properties-common \
-    apt-transport-https \
-    && rm -rf /var/lib/apt/lists/*
+# Install dependencies
+RUN apt-get update && apt-get install -y wget curl gnupg software-properties-common apt-transport-https && rm -rf /var/lib/apt/lists/*
 
-# Add Adoptium GPG key
+# Install Java
 RUN mkdir -p /etc/apt/keyrings \
     && wget -O /etc/apt/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
-    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update && apt-get install -y temurin-17-jdk
 
-# Add Jenkins GPG key
-RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | gpg --dearmor --output /usr/share/keyrings/jenkins-keyring.gpg \
-    && echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+# Install Jenkins
+RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | gpg --dearmor --output /usr/share/keyrings/jenkins-keyring.gpg \
+    && echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list \
+    && apt-get update && apt-get install -y jenkins
 
-# Install JDK and Jenkins
-RUN apt-get update && apt-get install -y \
-    temurin-17-jdk \
-    openjdk-17-jdk \
-    jenkins
-
-# Start Jenkins service
-CMD ["service", "jenkins", "start"]
+# Configure Jenkins to run directly
+ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
+CMD ["--httpPort=8080"]
