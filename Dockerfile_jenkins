@@ -1,19 +1,18 @@
 FROM ubuntu:latest
 
 # Install dependencies
-RUN apt-get update && apt-get install -y wget curl gnupg software-properties-common apt-transport-https && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget curl openjdk-11-jdk && rm -rf /var/lib/apt/lists/*
 
-# Install Java
-RUN mkdir -p /etc/apt/keyrings \
-    && wget -O /etc/apt/keyrings/adoptium.asc https://packages.adoptium.net/artifactory/api/gpg/key/public \
-    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list \
-    && apt-get update && apt-get install -y temurin-17-jdk
+# Download Jenkins WAR
+RUN wget http://updates.jenkins-ci.org/download/war/2.346.1/jenkins.war -O /opt/jenkins.war
 
-# Install Jenkins
-RUN curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | gpg --dearmor --output /usr/share/keyrings/jenkins-keyring.gpg \
-    && echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.gpg] https://pkg.jenkins.io/debian-stable binary/ | tee /etc/apt/sources.list.d/jenkins.list \
-    && apt-get update && apt-get install -y jenkins
+# Set environment variables for Java
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH $JAVA_HOME/bin:$PATH
 
-# Configure Jenkins to run directly
-ENTRYPOINT ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
+# Expose port for Jenkins
+EXPOSE 8080
+
+# Set entry point to run Jenkins
+ENTRYPOINT ["java", "-jar", "/opt/jenkins.war"]
 CMD ["--httpPort=8080"]
