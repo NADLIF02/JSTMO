@@ -8,6 +8,7 @@ services:
       - "9000:9000"
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      - ES_JAVA_OPTS=-Xmx1g -Xms512m
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
@@ -24,7 +25,7 @@ services:
     image: maven:3.8.4-openjdk-17
     container_name: maven
     volumes:
-      - ./project:/usr/src/mymaven
+      - ./usr/src/mymaven
       - maven_repo:/root/.m2
     working_dir: /usr/src/mymaven
     command: mvn clean install
