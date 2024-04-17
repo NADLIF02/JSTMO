@@ -1,0 +1,5 @@
+# Start from the SonarQube LTS community edition image
+FROM sonarqube:lts-community
+
+# Expose port 9000 for web interface access
+EXPOSE 9000
