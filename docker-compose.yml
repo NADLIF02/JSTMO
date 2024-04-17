@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+
+  trivy:
+    image: aquasec/trivy:latest
+    container_name: trivy
+    command: server --listen 0.0.0.0:4954
+    ports:
+      - "4954:4954"
+
+  maven:
+    image: maven:3.8.4-openjdk-17
+    container_name: maven
+    volumes:
+      - ./project:/usr/src/mymaven
+      - maven_repo:/root/.m2
+    working_dir: /usr/src/mymaven
+    command: mvn clean install
+
+  owasp:
+    image: owasp/dependency-check:latest
+    container_name: owasp
+    volumes:
+      - ./project:/src
+      - dependency_data:/usr/share/dependency-check/data
+    command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
+
+volumes:
+  sonarqube_data:
+  sonarqube_logs:
+  sonarqube_extensions:
+  maven_repo:
+  dependency_data:
