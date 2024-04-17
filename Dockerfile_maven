@@ -1,11 +1,6 @@
 # Using Maven official image
 FROM maven:3.8.4-openjdk-17
 
-# Set working directory for Maven commands
-WORKDIR /usr/src/mymaven
-
-# Optionally, copy your project
-COPY . /usr/src/mymaven
 
 # Default command to run with this image
 CMD ["mvn", "clean", "install"]
