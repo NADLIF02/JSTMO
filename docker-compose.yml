@@ -28,7 +28,7 @@ services:
       - ./project:/usr/src/mymaven  # Ensure this directory contains your Maven project with a pom.xml
       - maven_repo:/root/.m2
     working_dir: /usr/src/mymaven
-    command: mvn clean install
+    command: tail -f /dev/null
 
   owasp:
     image: owasp/dependency-check:latest
