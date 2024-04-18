@@ -1,6 +1,0 @@
-# Using Maven official image
-FROM maven:3.8.4-openjdk-17
-
-
-# Default command to run with this image
-CMD ["mvn", "clean", "install"]
