@@ -39,9 +39,7 @@ services:
     command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
 
   jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile_jenkins
+    image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
       - "8080:8080"
