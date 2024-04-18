@@ -13,8 +13,8 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_conf:/opt/sonarqube/conf  # Mount custom sonar.properties
-    mem_limit: 4g
-    mem_reservation: 2g
+    mem_limit: 6g
+    mem_reservation: 3g
     ulimits:
       nofile:
         soft: 65536
