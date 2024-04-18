@@ -25,7 +25,7 @@ services:
     image: maven:3.8.4-openjdk-17
     container_name: maven
     volumes:
-      - ./project:/usr/src/mymaven
+      - ./project:/usr/src/mymaven  # Ensure this directory contains your Maven project with a pom.xml
       - maven_repo:/root/.m2
     working_dir: /usr/src/mymaven
     command: mvn clean install
@@ -34,7 +34,7 @@ services:
     image: owasp/dependency-check:latest
     container_name: owasp
     volumes:
-      - ./project:/src
+      - ./project:/src  # Same as Maven, ensure this directory contains your code to scan
       - dependency_data:/usr/share/dependency-check/data
     command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
 
