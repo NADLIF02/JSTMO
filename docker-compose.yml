@@ -38,14 +38,6 @@ services:
       - dependency_data:/usr/share/dependency-check/data
     command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
 
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
 
 volumes:
   sonarqube_data:
@@ -53,4 +45,4 @@ volumes:
   sonarqube_extensions:
   maven_repo:
   dependency_data:
-  jenkins_home:
+
