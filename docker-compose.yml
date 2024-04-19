@@ -1,6 +1,29 @@
 version: '3.8'
 
 services:
+  sonarqube:
+    build:
+      context: .  # Docker context set to the directory containing the Dockerfile_Sonar
+      dockerfile: Dockerfile_Sonar
+    container_name: sonarqube
+    ports:
+      - "9001:9000"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_conf:/opt/sonarqube/conf
+    mem_limit: 6g
+    mem_reservation: 3g
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
+
+  # Other services as previously defined
   trivy:
     image: aquasec/trivy:latest
     container_name: trivy
@@ -12,7 +35,7 @@ services:
     image: maven:3.8.4-openjdk-17
     container_name: maven
     volumes:
-      - ./project:/usr/src/mymaven  # Ensure this directory contains your Maven project with a pom.xml
+      - ./project:/usr/src/mymaven
       - maven_repo:/root/.m2
     working_dir: /usr/src/mymaven
     command: tail -f /dev/null
@@ -21,7 +44,7 @@ services:
     image: owasp/dependency-check:latest
     container_name: owasp
     volumes:
-      - ./project:/src  # Same as Maven, ensure this directory contains your code to scan
+      - ./project:/src
       - dependency_data:/usr/share/dependency-check/data
     command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
 
@@ -29,12 +52,16 @@ services:
     image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
-      - "8080:8080"      # Jenkins web UI
-      - "50000:50000"    # Jenkins agent port
+      - "8080:8080"
+      - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
 
 volumes:
+  sonarqube_data: {}
+  sonarqube_logs: {}
+  sonarqube_extensions: {}
   maven_repo: {}
   dependency_data: {}
   jenkins_home: {}
+  sonarqube_conf: {}
