@@ -4,7 +4,7 @@ services:
   sonarqube:
     build:
       context: .  # Docker context set to the directory containing the Dockerfile_Sonar
-      dockerfile: Dockerfile_Son
+      dockerfile: Dockerfile
     container_name: sonarqube
     ports:
       - "9001:9000"
