@@ -5,4 +5,4 @@ FROM sonarqube:latest
 EXPOSE 9000
 
 # Start SonarQube server
-CMD ["./bin/run.sh"]
+CMD ["/opt/sonarqube/bin/run.sh"]
