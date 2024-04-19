@@ -3,11 +3,19 @@ version: '3.8'
 services:
   sonarqube:
     build:
-      context: .  # Docker context set to the directory containing the Dockerfile_Sonar
+      context: .
       dockerfile: Dockerfile
     container_name: sonarqube
     ports:
       - "9000:9000"
+    environment:
+      - SONAR_ES_JAVA_OPTS=-Xmx512m -Xms512m
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
     
 
   # Other services as previously defined
