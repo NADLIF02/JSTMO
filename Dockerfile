@@ -5,7 +5,7 @@ FROM sonarqube:lts-community
 ENV SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
 
 # Copy custom configuration files (assuming you have them in the 'conf' directory of your project)
-COPY conf/sonar.properties /opt/sonarqube/conf/sonar.properties
+#COPY conf/sonar.properties /opt/sonarqube/conf/sonar.properties
 
 # Expose the default SonarQube port
 EXPOSE 9000
