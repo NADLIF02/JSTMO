@@ -1,11 +1,8 @@
-# Use the official SonarQube image as a base
-FROM sonarqube:lts-community
+# Use the official SonarQube image from Docker Hub
+FROM sonarqube:latest
 
-# Set environment variable to disable Elasticsearch bootstrap checks
-ENV SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-
-# Copy custom configuration files (assuming you have them in the 'conf' directory of your project)
-#COPY conf/sonar.properties /opt/sonarqube/conf/sonar.properties
-
-# Expose the default SonarQube port
+# Expose the SonarQube port on the container
 EXPOSE 9000
+
+# Start SonarQube server
+CMD ["./bin/run.sh"]
