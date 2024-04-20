@@ -8,6 +8,8 @@ services:
     container_name: sonarqube
     ports:
       - "9000:9000"
+    networks:
+      - cicd-network
 
   trivy:
     image: aquasec/trivy:latest
@@ -15,6 +17,8 @@ services:
     command: server --listen 0.0.0.0:4954
     ports:
       - "4954:4954"
+    networks:
+      - cicd-network
 
   maven:
     image: maven:3.8.4-openjdk-17
@@ -24,6 +28,8 @@ services:
       - maven_repo:/root/.m2
     working_dir: /usr/src/mymaven
     command: tail -f /dev/null
+    networks:
+      - cicd-network
 
   owasp:
     image: owasp/dependency-check:latest
@@ -32,7 +38,13 @@ services:
       - ./project:/src
       - dependency_data:/usr/share/dependency-check/data
     command: ["--project", "MyProject", "--scan", "/src", "--format", "ALL"]
+    networks:
+      - cicd-network
 
 volumes:
   maven_repo: {}
   dependency_data: {}
+
+networks:
+  cicd-network:
+    driver: bridge
